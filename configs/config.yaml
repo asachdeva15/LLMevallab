@@ -1,0 +1,44 @@
+pipeline:
+  target_language: "en"
+  max_document_length: 2000       # chars — truncate longer docs for cost control
+  batch_size: 5                   # documents per run
+  save_raw_llm_output: true       # useful for debugging
+
+models:
+  default: "gemini"
+
+  gemini:
+    model_id: "gemini-1.5-pro"
+    temperature: 0.1              # low temp = more deterministic, better for extraction
+    max_output_tokens: 2048
+    timeout_seconds: 30
+
+  claude:                         # Phase 2
+    model_id: "claude-sonnet-4-6"
+    temperature: 0.1
+    max_output_tokens: 2048
+
+  openai:                         # Phase 2
+    model_id: "gpt-4o"
+    temperature: 0.1
+    max_output_tokens: 2048
+
+dataset:
+  name: "europarl"
+  language_pairs:
+    - ["de", "en"]               # German → English (Phase 1)
+  sample_size: 20                # how many docs to use for Phase 1
+  ground_truth_path: "data/ground_truth/europarl_references.json"
+
+evaluation:
+  metrics:
+    - bleu
+    - rouge
+    - bertscore
+  bertscore_model: "microsoft/deberta-xlarge-mnli"
+  output_path: "outputs/results/"
+
+paths:
+  raw_data: "data/raw/"
+  processed_data: "data/processed/"
+  outputs: "outputs/results/"
