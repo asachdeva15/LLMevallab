@@ -15,6 +15,8 @@ from tqdm import tqdm
 from src.core.base_processor import BaseDocumentProcessor
 from src.core.models import DocumentInput, PipelineResult
 from src.providers.gemini_processor import GeminiProcessor
+from src.pipeline.europarl_loader import EuroParlDataLoader
+from src.pipeline.cnn_dailymail_loader import CNNDailyMailLoader
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -304,18 +306,27 @@ if __name__ == "__main__":
 
     # Load documents using the right loader based on task
     if task == PipelineTask.TRANSLATION:
-        from src.pipeline.europarl_loader import EuroParlLoader
-        loader = EuroParlLoader()
-        documents = loader.load_from_disk(args.input)[: args.sample]
+        #check if data is already downloaded
+        if not os.path.exists(args.input):
+            print(f"Data not found at {args.input}, downloading...")
+            loader = EuroParlDataLoader()
+            loader.download_and_prepare()
+            args.input = loader.processed_dir / f"europarl_{loader.DEFAULT_LANGUAGE_PAIR}_{loader.sample_size}docs.json"
+        else:
+            print(f"Data found at {args.input}")
+        try:
+            documents = loader.load_from_disk(args.input)[: args.sample]
+        except Exception as e:
+            logger.error(f"Error loading documents: {e}")
+            raise e
+        print(f"Documents loaded: {len(documents)}")
 
     elif task == PipelineTask.SUMMARISATION:
-        from src.pipeline.cnn_dailymail_loader import CNNDailyMailLoader
         loader = CNNDailyMailLoader()
         documents = loader.load_from_disk(args.input)[: args.sample]
 
     else:  # FULL — user passes their own multilingual documents
-        from src.pipeline.europarl_loader import EuroParlLoader
-        loader = EuroParlLoader()
+        loader = EuroParlDataLoader()
         documents = loader.load_from_disk(args.input)[: args.sample]
 
     orchestrator = PipelineOrchestrator(processor=processor, config=config, task=task)
