@@ -1,8 +1,8 @@
 # 🧠 Multilingual Document Intelligence — LLM Extraction, Translation & Evaluation Framework
 
 > **A hands-on project for learning and demonstrating LLM evaluation in production systems.**
-> Built incrementally across three phases — from working prototype to published, world-ready showcase.
-
+> Building incrementally across three phases — from working prototype to published, world-ready showcase.
+> Code is written 60-70% by Claude, rest by me - real user. Agenda is to learn more about eval metrics for LLMs and bring more clarity over the course of time!
 ---
 
 ## 📌 Project Summary
