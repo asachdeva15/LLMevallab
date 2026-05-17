@@ -5,6 +5,10 @@
 > Code is written 60-70% by Claude, rest by me - real user. Agenda is to learn more about eval metrics for LLMs and bring more clarity over the course of time!
 ---
 
+## Pipeline Overview
+
+![Pipeline Overview](docs/assets/pipeline_overview.png)
+
 ## 📌 Project Summary
 
 This project builds an end-to-end pipeline that:
@@ -16,3 +20,7 @@ This project builds an end-to-end pipeline that:
 5. **Evaluates** all of the above with industry-standard metrics and a live dashboard
 
 The system is **model-agnostic by design** i.e. you can swap or add LLM providers (Gemini, Claude, OpenAI, open-source models) by adding a single file. No pipeline rewriting required.
+
+---
+
+
